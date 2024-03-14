@@ -1,0 +1,77 @@
+import os
+import json
+from datetime import datetime
+
+# File to store tasks
+TASK_FILE = "tasks.json"
+
+def load_tasks():
+    if os.path.exists(TASK_FILE):
+        with open(TASK_FILE, "r") as file:
+            return json.load(file)
+    else:
+        return []
+
+def save_tasks(tasks):
+    with open(TASK_FILE, "w") as file:
+        json.dump(tasks, file)
+
+def add_task(tasks):
+    task_name = input("Enter task name: ")
+    priority = input("Enter priority (high, medium, low): ")
+    due_date = input("Enter due date (YYYY-MM-DD): ")
+    tasks.append({
+        "name": task_name,
+        "priority": priority,
+        "due_date": due_date,
+        "completed": False
+    })
+    print("Task added successfully.")
+
+def remove_task(tasks):
+    print_tasks(tasks)
+    task_index = int(input("Enter task index to remove: "))
+    del tasks[task_index]
+    print("Task removed successfully.")
+
+def mark_completed(tasks):
+    print_tasks(tasks)
+    task_index = int(input("Enter task index to mark as completed: "))
+    tasks[task_index]["completed"] = True
+    print("Task marked as completed.")
+
+def print_tasks(tasks):
+    if not tasks:
+        print("No tasks.")
+    else:
+        for i, task in enumerate(tasks):
+            print(f"{i}. [{task['priority']}] {task['name']} - Due: {task['due_date']} (Completed: {task['completed']})")
+
+def main():
+    tasks = load_tasks()
+    while True:
+        print("\n=== To-Do List ===")
+        print("1. Add Task")
+        print("2. Remove Task")
+        print("3. Mark Task as Completed")
+        print("4. View Tasks")
+        print("5. Exit")
+        choice = input("Enter your choice: ")
+
+        if choice == "1":
+            add_task(tasks)
+        elif choice == "2":
+            remove_task(tasks)
+        elif choice == "3":
+            mark_completed(tasks)
+        elif choice == "4":
+            print_tasks(tasks)
+        elif choice == "5":
+            save_tasks(tasks)
+            print("Exiting...")
+            break
+        else:
+            print("Invalid choice. Please try again.")
+
+if _name_ == "_main_":
+    main()
